@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8000").replace(/\/+$/, "");
 const PANEL_POWER_W = 550;
 const ENERGY_PRICE_COP_PER_KWH = 926;
 const PANEL_COST_COP = 2_100_000;
