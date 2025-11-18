@@ -63,73 +63,166 @@ export default function App() {
 
   return (
     <div className="app">
-      <header>
-        <h1>Simulador de Paneles Solares</h1>
-        <p>
-          Ingresa tu consumo promedio mensual de energía para estimar el tamaño
-          del sistema solar y su rentabilidad.
-        </p>
-      </header>
-
-      <section className="card">
-        <form className="form" onSubmit={handleSubmit}>
-          <label htmlFor="monthly-kwh">Consumo mensual (kWh)</label>
-          <input
-            id="monthly-kwh"
-            type="number"
-            min="1"
-            step="any"
-            value={monthlyKwh}
-            onChange={(event) => setMonthlyKwh(event.target.value)}
-            placeholder="Ej. 400"
-            required
-          />
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? "Calculando..." : "Calcular"}
-          </button>
-        </form>
-
-        {error && <p className="error">{error}</p>}
-
-        {result && (
-          <div className="results">
-            <h2>Resultados estimados</h2>
-            <ul>
-              <li>
-                <span>Potencia del sistema:</span>
-                <strong>{result.system_size_kw} kW</strong>
-              </li>
-              <li>
-                <span>Número de paneles (550 W):</span>
-                <strong>{result.panel_count}</strong>
-              </li>
-              <li>
-                <span>Ahorro mensual estimado:</span>
-                <strong>{formatCurrency(result.monthly_savings_cop)}</strong>
-              </li>
-              <li>
-                <span>Costo de instalación:</span>
-                <strong>{formatCurrency(result.installation_cost_cop)}</strong>
-              </li>
-              <li>
-                <span>Retorno de inversión:</span>
-                <strong>{result.payback_years} años</strong>
-              </li>
-              <li>
-                <span>Área requerida:</span>
-                <strong>{result.area_m2} m²</strong>
-              </li>
-            </ul>
-            <p className="footnote">
-              Las estimaciones suponen {PANEL_POWER_W} W por panel,{" "}
-              {formatNumber(ENERGY_PRICE_COP_PER_KWH)} COP por kWh, un costo de
-              instalación de {formatCurrency(PANEL_COST_COP)} por panel,{" "}
-              {formatNumber(SUN_HOURS_PER_DAY)} horas solares pico, una relación
-              de rendimiento de {formatNumber(PERFORMANCE_RATIO)} y un área
-              aproximada de {formatNumber(PANEL_AREA_M2)} m² por panel.
+      <header className="top-bar">
+        <div className="brand">
+          <div className="brand__icon" aria-hidden="true">
+            ☀️
+          </div>
+          <div>
+            <p className="overline">Material Design 3</p>
+            <h1>Simulador de Paneles Solares</h1>
+            <p className="lead">
+              Ingresa tu consumo mensual para estimar el tamaño del sistema y su
+              rentabilidad con componentes solares residenciales.
             </p>
           </div>
-        )}
+        </div>
+
+        <div className="assistive-chips" aria-label="Pilares del cálculo">
+          <span className="assistive-chip">Cálculo instantáneo</span>
+          <span className="assistive-chip">Supuestos claros</span>
+          <span className="assistive-chip">Valores listos para acción</span>
+        </div>
+      </header>
+
+      <section className="layout">
+        <div className="card form-card">
+          <div className="card__header">
+            <div>
+              <p className="title-label">Datos de consumo</p>
+              <h2>Recibe una proyección personalizada</h2>
+            </div>
+            <p className="supporting-text">
+              Usamos tarifas promedio locales, radiación solar típica y
+              rendimiento realista de componentes para dimensionar tu sistema.
+            </p>
+          </div>
+
+          <form className="form" onSubmit={handleSubmit}>
+            <label className="field-label" htmlFor="monthly-kwh">
+              Consumo mensual (kWh)
+            </label>
+            <input
+              id="monthly-kwh"
+              type="number"
+              min="1"
+              step="any"
+              value={monthlyKwh}
+              onChange={(event) => setMonthlyKwh(event.target.value)}
+              placeholder="Ej. 400"
+              required
+            />
+            <div className="actions">
+              <button className="button button--filled" type="submit" disabled={isLoading}>
+                {isLoading ? "Calculando..." : "Calcular"}
+              </button>
+              <span className="helper-text">
+                Basado en tarifa de {formatNumber(ENERGY_PRICE_COP_PER_KWH)} COP/kWh
+              </span>
+            </div>
+          </form>
+
+          {error && <p className="error">{error}</p>}
+        </div>
+
+        <div className="card results-card">
+          <div className="card__header">
+            <p className="title-label">Resultados estimados</p>
+            <h2>Impacto energético y financiero</h2>
+            <p className="supporting-text">
+              Valores listos para presentar, con foco en ahorro, inversión y
+              espacio necesario.
+            </p>
+          </div>
+
+          {result ? (
+            <>
+              <div className="highlight">
+                <div>
+                  <p className="overline">Retorno aproximado</p>
+                  <strong className="highlight__value">{result.payback_years} años</strong>
+                  <p className="supporting-text">Tiempo estimado para recuperar la inversión.</p>
+                </div>
+                <div className="badge">ROI</div>
+              </div>
+
+              <ul className="results-grid">
+                <li>
+                  <p className="result-label">Potencia del sistema</p>
+                  <p className="result-value">{result.system_size_kw} kW</p>
+                  <p className="result-hint">Capacidad nominal para cubrir tu consumo promedio.</p>
+                </li>
+                <li>
+                  <p className="result-label">Número de paneles (550 W)</p>
+                  <p className="result-value">{result.panel_count}</p>
+                  <p className="result-hint">Cantidad estimada de módulos necesarios.</p>
+                </li>
+                <li>
+                  <p className="result-label">Ahorro mensual</p>
+                  <p className="result-value">{formatCurrency(result.monthly_savings_cop)}</p>
+                  <p className="result-hint">Reducción esperada en tu factura de energía.</p>
+                </li>
+                <li>
+                  <p className="result-label">Costo de instalación</p>
+                  <p className="result-value">{formatCurrency(result.installation_cost_cop)}</p>
+                  <p className="result-hint">Inversión aproximada considerando equipos y montaje.</p>
+                </li>
+                <li>
+                  <p className="result-label">Área requerida</p>
+                  <p className="result-value">{result.area_m2} m²</p>
+                  <p className="result-hint">Superficie mínima recomendada para los paneles.</p>
+                </li>
+              </ul>
+            </>
+          ) : (
+            <div className="placeholder">
+              <p className="lead">Comienza ingresando tu consumo mensual.</p>
+              <p className="supporting-text">
+                Calcularemos potencia, número de paneles, inversión y ahorro para
+                que tomes decisiones informadas.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="card assumptions">
+        <div className="assumptions__header">
+          <p className="title-label">Supuestos del modelo</p>
+          <h3>Contexto que guía los resultados</h3>
+        </div>
+        <div className="assumptions__grid">
+          <div className="assumption">
+            <p className="assumption__label">Potencia por panel</p>
+            <p className="assumption__value">{PANEL_POWER_W} W</p>
+          </div>
+          <div className="assumption">
+            <p className="assumption__label">Tarifa de energía</p>
+            <p className="assumption__value">
+              {formatNumber(ENERGY_PRICE_COP_PER_KWH)} COP/kWh
+            </p>
+          </div>
+          <div className="assumption">
+            <p className="assumption__label">Horas solares pico</p>
+            <p className="assumption__value">{formatNumber(SUN_HOURS_PER_DAY)} h/día</p>
+          </div>
+          <div className="assumption">
+            <p className="assumption__label">Relación de rendimiento</p>
+            <p className="assumption__value">{formatNumber(PERFORMANCE_RATIO)}</p>
+          </div>
+          <div className="assumption">
+            <p className="assumption__label">Costo por panel</p>
+            <p className="assumption__value">{formatCurrency(PANEL_COST_COP)}</p>
+          </div>
+          <div className="assumption">
+            <p className="assumption__label">Área por panel</p>
+            <p className="assumption__value">{formatNumber(PANEL_AREA_M2)} m²</p>
+          </div>
+        </div>
+        <p className="supporting-text">
+          Estos valores siguen las guías de Material Design 3 para presentar
+          datos técnicos de forma legible, con énfasis en jerarquía y contraste.
+        </p>
       </section>
     </div>
   );
