@@ -30,7 +30,6 @@ export default function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
-    setResult(null);
 
     const parsedValue = Number(monthlyKwh);
     if (!parsedValue || parsedValue <= 0) {
