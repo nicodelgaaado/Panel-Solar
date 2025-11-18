@@ -65,7 +65,7 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <h1>Simulador de Sistema Solar</h1>
+        <h1>Simulador de Paneles Solares</h1>
         <p>
           Ingresa tu consumo promedio mensual de energía para estimar el tamaño
           del sistema solar y su rentabilidad.
