@@ -6,9 +6,9 @@ import math
 # Parametros base para dimensionar el sistema solar residencial
 SUN_HOURS_PER_DAY = 5.0  # Horas promedio de sol pico asumidas para el calculo
 PERFORMANCE_RATIO = 0.8  # Ineficiencias globales (cables, inversor, temperatura)
-PANEL_POWER_W = 550
-PANEL_COST_COP = 2_100_000
-ENERGY_PRICE_COP_PER_KWH = 926
+PANEL_POWER_W = 550  # Potencia nominal del panel utilizado (en W)
+PANEL_COST_COP = 2_100_000  # Costo aproximado por panel en pesos colombianos
+ENERGY_PRICE_COP_PER_KWH = 926  # Tarifa promedio de energia en COP por kWh
 PANEL_AREA_M2 = 2.1  # Area aproximada de un panel de 550 W
 MONTH_DAYS = 30  # Longitud promedio simplificada de un mes
 
