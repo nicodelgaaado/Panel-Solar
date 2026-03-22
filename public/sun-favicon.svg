@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .ray { stroke: #f59e0b; stroke-linecap: round; stroke-width: 4; }
+    </style>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#ecfdf5" />
+  <g transform="translate(32 32)">
+    <g>
+      <line class="ray" x1="0" y1="-24" x2="0" y2="-16" />
+      <line class="ray" x1="0" y1="16" x2="0" y2="24" />
+      <line class="ray" x1="-24" y1="0" x2="-16" y2="0" />
+      <line class="ray" x1="16" y1="0" x2="24" y2="0" />
+      <line class="ray" x1="-17" y1="-17" x2="-11.5" y2="-11.5" />
+      <line class="ray" x1="17" y1="17" x2="11.5" y2="11.5" />
+      <line class="ray" x1="-17" y1="17" x2="-11.5" y2="11.5" />
+      <line class="ray" x1="17" y1="-17" x2="11.5" y2="-11.5" />
+    </g>
+    <circle r="12" fill="#facc15" stroke="#f59e0b" stroke-width="4" />
+  </g>
+</svg>

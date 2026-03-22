@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   description:
     "Calcula el tamano, costo, ahorro y retorno estimado de un sistema solar residencial desde una sola aplicacion web.",
   applicationName: "Panel Solar",
+  icons: {
+    icon: "/sun-favicon.svg",
+    shortcut: "/sun-favicon.svg",
+  },
   openGraph: {
     title: "Panel Solar",
     description: "Simulador web para dimensionar una instalacion solar residencial.",
