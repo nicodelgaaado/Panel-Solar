@@ -1,52 +1,49 @@
-# Panel Solar – Aplicación Web
+# Panel Solar
 
-Aplicación que dimensiona un sistema solar fotovoltaico a partir del consumo energético mensual. El proyecto se compone de un backend en FastAPI y un frontend en React (Vite).
+Aplicación web construida con Next.js, TypeScript, Tailwind CSS v4 y shadcn/ui para estimar el dimensionamiento de un sistema solar residencial.
 
-## Requerimientos
+## Stack
 
-- Python 3.10+
-- Node.js 18+ y npm
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui
 
-## Backend (FastAPI)
-
-```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate      # En PowerShell: .\.venv\Scripts\Activate
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-El servidor expone la ruta `POST /calculate` que recibe:
-
-```json
-{ "monthly_kwh": 400 }
-```
-
-Y responde con los cálculos del sistema solar en formato JSON.
-
-## Frontend (React + Vite)
+## Desarrollo local
 
 ```bash
-cd frontend
 npm install
 npm run dev
 ```
 
-Por defecto el frontend espera que la API esté disponible en `http://localhost:8000`. Puedes cambiarlo creando un archivo `.env` con la variable `VITE_API_URL`.
+La app queda disponible en `http://localhost:3000`.
 
-## Lógica de cálculo
+## Build de producción
 
-- Horas solares pico promedio: **5 h/día**
-- Relación de rendimiento (pérdidas del sistema): **0.8**
-- Potencia por panel: **550 W**
-- Costo de instalación por panel: **2 100 000 COP**
-- Precio de la energía: **926 COP/kWh**
-- Área estimada por panel: **2.1 m²**
+```bash
+npm run build
+npm start
+```
 
-La potencia del sistema en kW se obtiene dividiendo el consumo diario entre las horas solares pico efectivas (`horas solares * relación de rendimiento`). El número de paneles es el resultado entero hacia arriba de la potencia total en watts sobre 550 W. Con ello se estiman el costo total, los ahorros y el retorno de inversión en años.
+## Despliegue en Vercel
 
-## Estructura
+1. Importa este repositorio en Vercel.
+2. Framework preset: `Next.js`.
+3. Build command: `npm run build`.
+4. Output setting: dejar el valor por defecto de Next.js.
 
-- `backend/`: API FastAPI (`uvicorn main:app --reload`)
-- `frontend/`: React + Vite (`npm run dev`)
+No se necesita backend en Python ni variables de entorno para ejecutar la simulación base.
+
+## Lógica del simulador
+
+El cálculo usa estos supuestos:
+
+- Horas solares pico: `5 h/día`
+- Relación de rendimiento: `0.8`
+- Potencia por panel: `550 W`
+- Costo por panel: `2,100,000 COP`
+- Precio de energía: `926 COP/kWh`
+- Área por panel: `2.1 m²`
+
+La lógica vive en [`lib/solar.ts`](/c:/Users/Nlicolas/Panel-Solar/lib/solar.ts).
