@@ -16,7 +16,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -44,19 +43,19 @@ const metricCards = (result: SolarCalculationResult) => [
     icon: Bolt,
     label: "Potencia requerida",
     value: `${numberFormatter.format(result.systemSizeKw)} kW`,
-    hint: "Capacidad nominal estimada para cubrir tu consumo promedio.",
+    hint: "Capacidad nominal para cubrir tu consumo promedio.",
   },
   {
     icon: SunMedium,
     label: "Paneles de 550 W",
     value: numberFormatter.format(result.panelCount),
-    hint: "Cantidad aproximada de modulos para el arreglo solar.",
+    hint: "Cantidad aproximada de modulos.",
   },
   {
     icon: BadgeDollarSign,
     label: "Ahorro mensual",
     value: currencyFormatter.format(result.monthlySavingsCop),
-    hint: "Reduccion estimada de la factura electrica.",
+    hint: "Reduccion estimada de la factura.",
   },
   {
     icon: LineChart,
@@ -68,13 +67,31 @@ const metricCards = (result: SolarCalculationResult) => [
     icon: Map,
     label: "Area requerida",
     value: `${numberFormatter.format(result.areaM2)} m2`,
-    hint: "Superficie util sugerida para instalar los paneles.",
+    hint: "Superficie util sugerida para instalar.",
   },
   {
     icon: Leaf,
     label: "Generacion anual",
     value: `${numberFormatter.format(result.annualGenerationKwh)} kWh`,
-    hint: "Produccion esperada del sistema durante un ano promedio.",
+    hint: "Produccion esperada en un ano promedio.",
+  },
+] as const;
+
+const heroHighlights = [
+  {
+    label: "Radiacion util",
+    value: `${numberFormatter.format(solarAssumptions.sunHoursPerDay)} h`,
+    hint: "Horas solares pico por dia.",
+  },
+  {
+    label: "Rendimiento",
+    value: `${solarAssumptions.performanceRatio * 100}%`,
+    hint: "Perdidas globales consideradas.",
+  },
+  {
+    label: "Panel estandar",
+    value: `${solarAssumptions.panelPowerW} W`,
+    hint: "Potencia de referencia por modulo.",
   },
 ] as const;
 
@@ -139,78 +156,51 @@ export function SolarCalculator() {
   }
 
   return (
-    <main className="flex-1">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-5 sm:px-6 lg:px-8 lg:py-6">
-        <section className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="animate-in slide-in-from-bottom-4 duration-500">
-            <Badge
-              variant="outline"
-              className="mb-3 border-emerald-200 bg-emerald-50 text-emerald-800"
-            >
-              Simulacion residencial
-            </Badge>
+    <main className="flex-1 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.09),transparent_42%)]">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4 sm:px-6 lg:px-8 lg:py-5">
+        <section className="animate-in slide-in-from-bottom-4 rounded-3xl border border-emerald-100 bg-white/85 p-4 shadow-none backdrop-blur-sm duration-500 sm:p-5">
+          <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div className="space-y-3">
-              <h1 className="max-w-3xl font-heading text-3xl leading-tight tracking-tight text-emerald-950 sm:text-4xl lg:text-5xl">
-                Dimensiona tu sistema solar con una interfaz simple y enfocada
-                en eficiencia.
-              </h1>
-              <p className="max-w-2xl text-sm leading-6 text-emerald-900/80 sm:text-base">
-                Ingresa tu consumo mensual y obten una estimacion compacta de
-                potencia, paneles, ahorro, inversion y retorno.
-              </p>
+              <Badge
+                variant="outline"
+                className="w-fit border-emerald-200 bg-emerald-50 text-emerald-800"
+              >
+                Simulacion residencial
+              </Badge>
+              <div className="space-y-2">
+                <h1 className="max-w-3xl font-heading text-3xl leading-tight tracking-tight text-emerald-950 sm:text-4xl lg:text-[2.55rem]">
+                  Calcula tamano, inversion y retorno de tu sistema solar.
+                </h1>
+                <p className="max-w-2xl text-sm leading-5 text-emerald-900/80 sm:text-base">
+                  Ingresa tu consumo mensual y revisa potencia, paneles, costo,
+                  ahorro y retorno en una sola vista.
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-3">
+              {heroHighlights.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-2.5"
+                >
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-emerald-800/70">
+                    {item.label}
+                  </p>
+                  <p className="mt-1 font-heading text-2xl leading-none text-emerald-950">
+                    {item.value}
+                  </p>
+                  <p className="mt-1 text-xs leading-4 text-emerald-900/70">
+                    {item.hint}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
-
-          <Card className="animate-in slide-in-from-bottom-4 border-emerald-100 bg-card shadow-none duration-500">
-            <CardHeader>
-              <CardTitle className="font-heading text-lg text-emerald-950">
-                Resumen del modelo
-              </CardTitle>
-              <CardDescription className="text-sm text-emerald-900/70">
-                Supuestos base para una simulacion residencial rapida.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
-              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
-                <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-800/70">
-                  Radiacion util
-                </p>
-                <p className="mt-1.5 font-heading text-2xl text-emerald-950">
-                  {numberFormatter.format(solarAssumptions.sunHoursPerDay)} h
-                </p>
-                <p className="mt-1 text-xs text-emerald-900/70">
-                  Horas solares pico por dia.
-                </p>
-              </div>
-              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
-                <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-800/70">
-                  Rendimiento
-                </p>
-                <p className="mt-1.5 font-heading text-2xl text-emerald-950">
-                  {solarAssumptions.performanceRatio * 100}%
-                </p>
-                <p className="mt-1 text-xs text-emerald-900/70">
-                  Perdidas globales ya consideradas.
-                </p>
-              </div>
-              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-3">
-                <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-800/70">
-                  Panel estandar
-                </p>
-                <p className="mt-1.5 font-heading text-2xl text-emerald-950">
-                  550 W
-                </p>
-                <p className="mt-1 text-xs text-emerald-900/70">
-                  Potencia de referencia por modulo.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
         </section>
 
-        <section className="grid gap-4 xl:grid-cols-[0.92fr_1.08fr]">
+        <section className="grid gap-3 lg:grid-cols-[0.84fr_1.16fr]">
           <Card className="animate-in slide-in-from-bottom-4 border-emerald-100 bg-card shadow-none duration-500">
-            <CardHeader>
+            <CardHeader className="gap-2 pb-4">
               <CardTitle className="font-heading text-xl text-emerald-950">
                 Calculadora solar
               </CardTitle>
@@ -219,7 +209,7 @@ export function SolarCalculator() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <form className="space-y-3" onSubmit={handleSubmit}>
+              <form className="space-y-2.5" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                   <label
                     htmlFor="monthly-kwh"
@@ -227,7 +217,7 @@ export function SolarCalculator() {
                   >
                     Consumo mensual
                   </label>
-                  <div className="flex gap-3">
+                  <div className="flex flex-col gap-2 sm:flex-row">
                     <Input
                       id="monthly-kwh"
                       type="number"
@@ -241,7 +231,7 @@ export function SolarCalculator() {
                     />
                     <Button
                       type="submit"
-                      className="h-10 bg-emerald-700 px-4 text-white hover:bg-emerald-800"
+                      className="h-10 bg-emerald-700 px-4 text-white hover:bg-emerald-800 sm:min-w-32"
                     >
                       {isPending ? "Calculando..." : "Calcular"}
                     </Button>
@@ -260,14 +250,14 @@ export function SolarCalculator() {
                 <p className="text-sm font-medium text-emerald-950">
                   Presets rapidos
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {consumptionPresets.map((preset) => (
                     <Button
                       key={preset.value}
                       type="button"
                       variant="outline"
                       onClick={() => applyPreset(preset.value)}
-                      className="h-8 border-emerald-200 bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
+                      className="h-7 border-emerald-200 bg-emerald-50 px-2.5 text-xs text-emerald-900 hover:bg-emerald-100"
                     >
                       {preset.label}: {preset.value} kWh
                     </Button>
@@ -281,31 +271,23 @@ export function SolarCalculator() {
                 </div>
               ) : null}
 
-              <div className="rounded-xl border border-emerald-200 bg-emerald-700 px-4 py-4 text-emerald-50">
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-700 px-4 py-3.5 text-emerald-50">
                 <p className="text-[11px] uppercase tracking-[0.22em] text-emerald-100/80">
                   Inversion aproximada
                 </p>
                 <p className="mt-2 font-heading text-3xl leading-none">
                   {currencyFormatter.format(result.installationCostCop)}
                 </p>
-                <p className="mt-2 max-w-sm text-xs leading-5 text-emerald-100/85">
-                  Calculada con {result.panelCount} paneles, instalacion
-                  estimada y montaje residencial promedio.
+                <p className="mt-1.5 max-w-sm text-xs leading-5 text-emerald-100/85">
+                  Estimada con {result.panelCount} paneles, instalacion y
+                  montaje residencial promedio.
                 </p>
               </div>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 border-t border-emerald-100 bg-emerald-50/50">
-              <p className="text-sm font-medium text-emerald-950">
-                Resultado inmediato
-              </p>
-              <p className="text-xs text-emerald-900/70">
-                Ajusta el consumo y compara escenarios en segundos.
-              </p>
-            </CardFooter>
           </Card>
 
           <Card className="animate-in slide-in-from-bottom-4 border-emerald-100 bg-card shadow-none duration-500">
-            <CardHeader className="gap-2">
+            <CardHeader className="gap-2 pb-4">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge className="bg-emerald-100 text-emerald-900">
                   Resultado estimado
@@ -325,25 +307,25 @@ export function SolarCalculator() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-2.5 md:grid-cols-2 lg:grid-cols-3">
                 {metricCards(result).map((metric) => {
                   const Icon = metric.icon;
 
                   return (
                     <div
                       key={metric.label}
-                      className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3"
+                      className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-2.5"
                     >
                       <div className="flex items-center gap-2 text-emerald-900/75">
                         <Icon className="size-4 text-emerald-700" />
-                        <p className="text-xs font-medium uppercase tracking-[0.12em]">
+                        <p className="text-[11px] font-medium uppercase tracking-[0.12em]">
                           {metric.label}
                         </p>
                       </div>
-                      <p className="mt-2 font-heading text-2xl leading-none text-emerald-950">
+                      <p className="mt-1.5 font-heading text-[1.65rem] leading-none text-emerald-950">
                         {metric.value}
                       </p>
-                      <p className="mt-2 text-xs leading-5 text-emerald-900/70">
+                      <p className="mt-1 text-[11px] leading-4 text-emerald-900/70">
                         {metric.hint}
                       </p>
                     </div>
@@ -353,8 +335,8 @@ export function SolarCalculator() {
 
               <Separator className="bg-emerald-100" />
 
-              <div className="grid gap-3 lg:grid-cols-[0.9fr_1.1fr]">
-                <div className="rounded-xl border border-emerald-200 bg-emerald-100 p-4">
+              <div className="grid gap-3 lg:grid-cols-[0.72fr_1.28fr]">
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-100 p-4">
                   <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-900/70">
                     ROI aproximado
                   </p>
@@ -365,7 +347,7 @@ export function SolarCalculator() {
                     anos para recuperar la inversion inicial.
                   </p>
                 </div>
-                <div className="rounded-xl border border-emerald-200 bg-white p-4">
+                <div className="rounded-2xl border border-emerald-200 bg-white p-4">
                   <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-900/70">
                     Lectura rapida
                   </p>
@@ -381,7 +363,7 @@ export function SolarCalculator() {
           </Card>
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+        <section>
           <Card className="animate-in slide-in-from-bottom-4 border-emerald-100 bg-card shadow-none duration-500">
             <CardHeader>
               <CardTitle className="font-heading text-xl text-emerald-950">
@@ -391,11 +373,11 @@ export function SolarCalculator() {
                 Parametros usados para dimensionar el sistema residencial.
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            <CardContent className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {modelFacts.map((fact) => (
                 <div
                   key={fact.label}
-                  className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-3"
+                  className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3"
                 >
                   <p className="text-xs text-emerald-900/70">{fact.label}</p>
                   <p className="mt-1.5 font-heading text-xl text-emerald-950">
@@ -404,35 +386,6 @@ export function SolarCalculator() {
                 </div>
               ))}
             </CardContent>
-          </Card>
-
-          <Card className="animate-in slide-in-from-bottom-4 border-emerald-100 bg-emerald-900 text-emerald-50 shadow-none duration-500">
-            <CardHeader>
-              <CardTitle className="font-heading text-xl">
-                Enfoque sostenible
-              </CardTitle>
-              <CardDescription className="text-emerald-100/75">
-                Una lectura clara para revisar consumo, inversion y ahorro.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-6 text-emerald-50/90">
-              <p>
-                El diseno prioriza una visual compacta, menos decorativa y mas
-                enfocada en lectura rapida.
-              </p>
-              <p>
-                Los componentes principales usan una paleta verde para reforzar
-                el caracter ecologico del simulador.
-              </p>
-            </CardContent>
-            <CardFooter className="border-t border-emerald-800 bg-emerald-900">
-              <div className="flex flex-wrap gap-2">
-                <Badge className="bg-emerald-800 text-emerald-50">Consumo</Badge>
-                <Badge className="bg-emerald-800 text-emerald-50">Ahorro</Badge>
-                <Badge className="bg-emerald-800 text-emerald-50">Retorno</Badge>
-                <Badge className="bg-emerald-800 text-emerald-50">Area</Badge>
-              </div>
-            </CardFooter>
           </Card>
         </section>
       </div>
